@@ -1,5 +1,6 @@
 import tweepy
 import csv
+from tqdm import tqdm
 
 
 def get_my_key():
@@ -71,7 +72,7 @@ def make_tlist(tlistname, members):
         api.create_list(name=makelist_name,mode="private")
 
     tlistid = get_tlist_id(tlistname, username=None)
-    for l in members:
+    for l in tqdm(members):
         if(api.get_user(id=l).protected!=True):
             try:
                 api.add_list_member(
