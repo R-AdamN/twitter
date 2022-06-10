@@ -63,9 +63,9 @@ def make_tlist(tlistname, members):
     makeflg=1
 
     for j in api.lists_all(screen_name=myname):
-        if(j.name==listname):
+        if(j.name==tlistname):
             makeflg=0
-            existing_members = [l[1] for l in get_tlist_member(tlistname)]
+            existing_members = [l for l in get_tlist_member(tlistname)]
             members = list(set(members) - set(existing_members))
 
     if makeflg:
