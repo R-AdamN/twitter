@@ -31,15 +31,26 @@ def get_myname():
     f = open("../myname.txt", "r")
     myname = f.read()
     f.close()
-
     return myname
 
-def get_tlist_member(username=None,tlistname):
+def get_tlist_id(tlistname, username=None):
     if(username==None):
-        myname = get_myname()
+        username = get_myname()
     tlist_members_list = []
     api = get_api()
-    for member in tweepy.Cursor(api.list_members,slug=listname,owner_screen_name=myname).items():
+    tlistid = None
+    for j in api.lists_all(screen_name=username):
+        if(j.name==tlistname):
+            tlistid = j.id
+    return tlistid
+
+def get_tlist_member(tlistname, username=None):
+    if(username==None):
+        username = get_myname()
+    tlist_members_list = []
+    api = get_api()
+    tlistid = get_tlist_id(tlistname, username=None)
+    for member in tweepy.Cursor(api.list_members,slug=tlistid,owner_screen_name=username).items():
         tlist_members_list.append(member.id)
     return(tlist_members_list)
 
@@ -59,12 +70,12 @@ def make_tlist(tlistname, members):
     if makeflg:
         api.create_list(name=makelist_name,mode="private")
 
-    # pprint(member)
+    tlistid = get_tlist_id(tlistname, username=None)
     for l in members:
         if(api.get_user(id=l).protected!=True):
             try:
                 api.add_list_member(
-                                    list_id=get_list(owner=myname, slug=tlistname).id,
+                                    list_id=tlistid,
                                     id=l,
                                     owner_screen_name=myname
                                     )
