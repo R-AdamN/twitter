@@ -34,10 +34,40 @@ def get_myname():
 
     return myname
 
-def get_tlist_member(listname):
+def get_tlist_member(username=None,tlistname):
+    if(username==None):
+        myname = get_myname()
     tlist_members_list = []
     api = get_api()
-    myname = get_myname() #リスト作成者の@~~の~~
     for member in tweepy.Cursor(api.list_members,slug=listname,owner_screen_name=myname).items():
         tlist_members_list.append(member.id)
     return(tlist_members_list)
+
+
+def make_tlist(tlistname, members):
+    api = get_api()
+    myname = get_myname()
+
+    makeflg=1
+
+    for j in api.lists_all(screen_name=myname):
+        if(j.name==listname):
+            makeflg=0
+            existing_members = [l[1] for l in get_tlist_member(tlistname)]
+            members = list(set(members) - set(existing_members))
+
+    if makeflg:
+        api.create_list(name=makelist_name,mode="private")
+
+    # pprint(member)
+    for l in members:
+        if(api.get_user(id=l).protected!=True):
+            try:
+                api.add_list_member(
+                                    list_id=get_list(owner=myname, slug=tlistname).id,
+                                    id=l,
+                                    owner_screen_name=myname
+                                    )
+            except tweepy.error.TweepError as e:
+                print(l)
+                print(e['message'])
