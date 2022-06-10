@@ -33,3 +33,11 @@ def get_myname():
     f.close()
 
     return myname
+
+def get_tlist_member(listname):
+    tlist_members_list = []
+    api = get_api()
+    myname = get_myname() #リスト作成者の@~~の~~
+    for member in tweepy.Cursor(api.list_members,slug=listname,owner_screen_name=myname).items():
+        tlist_members_list.append(member.id)
+    return(tlist_members_list)
