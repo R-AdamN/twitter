@@ -26,3 +26,10 @@ def get_api():
     api = tweepy.API(auth,wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
 
     return api
+
+def get_myname():
+    f = open("../myname.txt", "r")
+    myname = f.read()
+    f.close()
+
+    return myname
