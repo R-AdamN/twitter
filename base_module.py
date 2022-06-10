@@ -45,12 +45,13 @@ def get_tlist_id(tlistname, username=None):
             tlistid = j.id
     return tlistid
 
-def get_tlist_member(tlistname, username=None):
+def get_tlist_member(tlistname=None, tlistid=None, username=None):
     if(username==None):
         username = get_myname()
     tlist_members_list = []
     api = get_api()
-    tlistid = get_tlist_id(tlistname=tlistname, username=username)
+    if(tlistid==None):
+        tlistid = get_tlist_id(tlistname=tlistname, username=username)
     for member in tweepy.Cursor(api.list_members,list_id=tlistid,owner_screen_name=username).items():
         tlist_members_list.append(member.id)
     return(tlist_members_list)
