@@ -84,3 +84,14 @@ def make_tlist(tlistname, members):
             except tweepy.error.TweepError as e:
                 print(l)
                 print(e['message'])
+
+def limit_catch_cursor(cursor):
+    cnt = 0
+    while(True):
+        try:
+            yield cursor.next()
+        except tweepy.RateLimitError:
+            print("limit")
+            return
+        except StopIteration:
+            yield "end"
