@@ -83,7 +83,7 @@ def make_tlist(tlistname, members):
                                     )
             except tweepy.error.TweepError as e:
                 print(l)
-                print(e['message'])
+                print(e)
 
 def limit_catch_cursor(cursor):
     cnt = 0
