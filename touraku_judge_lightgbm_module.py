@@ -8,14 +8,17 @@ from sklearn.metrics import f1_score
 import pickle
 
 
-def check(tweet_id_list,text_list):
+def check(tweet_id_list,text_list,user_list=None):
+    if(user_list==None):
+        user_list = [None]*len(tweet_id_list)
     touraku_tweet = []
-    l = [tweet_id_list,text_list]
+    touraku_user = []
+    l = [tweet_id_list,text_list,user_list]
     judge_num = len(l[0])
     l.append([0 for i in range(judge_num)])
     l_np = np.array(l).T
-    columns = ['tweet_id', 'body', 'touraku']
-    col = "touraku"
+    columns = ['tweet_id', 'body', "user", 'touraku']
+    # col = "touraku"
     df_judge = pd.DataFrame(data=l_np, columns=columns)
 
     indices = np.loadtxt('../model/data/indices.csv', delimiter=',')
@@ -52,12 +55,15 @@ def check(tweet_id_list,text_list):
     modi_feature = pd.concat(modi_feature, axis=1).T
     # 各文書と作成した特徴量を結合
     df_judge_feature = pd.concat([df_judge, modi_feature], axis=1)
-    df_judge_feature = df_judge_feature.drop(["tweet_id", "body"], axis=1)
-    judge_x = df_judge_feature.drop(col, axis=1)
+    # df_judge_feature = df_judge_feature.drop(["tweet_id", "body"], axis=1)
+    # judge_x = df_judge_feature.drop(col, axis=1)
+    judge_x = df_judge_feature.drop(columns, axis=1)
+
 
     judge = model.predict(judge_x)
     for i,result in enumerate(judge):
         if(result>0.5):
             touraku_tweet.append(df_judge['tweet_id'][i])
+            touraku_user.append(df_judge["user"])
             # print(df_judge['body'][i])
-    return touraku_tweet
+    return touraku_tweet,touraku_user
