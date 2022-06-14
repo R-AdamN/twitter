@@ -64,6 +64,6 @@ def check(tweet_id_list,text_list,user_list=None):
     for i,result in enumerate(judge):
         if(result>0.5):
             touraku_tweet.append(df_judge['tweet_id'][i])
-            touraku_user.append(df_judge["user"])
+            touraku_user.append(df_judge["user"][i])
             # print(df_judge['body'][i])
     return touraku_tweet,touraku_user
