@@ -4,12 +4,15 @@ from collections import deque
 import datetime
 import touraku_judge_lightgbm_module
 from collections import deque
+import pytz
 
 
 
-touraku_dt_JST = datetime.datetime(2022,6,10,16,45)
+touraku_dt_JST = datetime.datetime(2022,11,11,16,45)
 delta_GMT_p9 = datetime.timedelta(hours=9)
 touraku_dt_GMT = touraku_dt_JST - delta_GMT_p9
+jp = pytz.timezone('Asia/Tokyo')
+touraku_dt_GMT = jp.localize(touraku_dt_GMT)
 
 target_tlistname = ""
 subject_user_list = base_module.get_tlist_member(tlistname=target_tlistname)
